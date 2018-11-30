@@ -1,4 +1,4 @@
-file /opt/epics/modules/esschic/nicklasholmberg2/db/esschicTimestampBuffer.template 
+file evrTimestampBuffer.template 
 {
 pattern {SYS		, DRIVEID	, TDC_EVENT_LINK		, BEAMPULSE_EVENT_LINK		, TSARR_N}
 	{$(CHIC_SYS)	, $(CHOP_DRV)01:, $(SYS)$(DEVICE)EvtACnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, 50}
