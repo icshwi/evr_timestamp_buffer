@@ -1,0 +1,113 @@
+# AI to start processing the TDC timestamp
+record(ai, "$(SYS)$(DRIVEID)TDCProc")
+{
+    field(DESC, "Start processing the TDC record")
+    field(INP,  "$(TDC_EVENT_LINK) CPP")
+    field(FLNK, "$(SYS)$(DRIVEID)TDC_Epics.PROC")
+}
+
+# Convert revolution interrupt timestamp from chopper to double
+# Needs forward link from softEvent template of associated event code.
+record(ai, "$(SYS)$(DRIVEID)TDC_Epics")
+{
+    field(DESC, "EPICS epoch TDC timestamp")
+    field(TSEL, "$(TDC_EVENT_LINK).TIME")
+    field(DTYP, "Soft Timestamp")
+    field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix_stringin.PROC")
+}
+
+# Convert revolution interrupt timestamp from chopper to double
+# Needs forward link from softEvent template of associated event code.
+record(stringin, "$(SYS)$(DRIVEID)TDC_Unix_stringin")
+{
+    field(DESC, "Timestamp of the TDC")
+    field(INP,  "@%s.%09f")
+    field(TSEL, "$(TDC_EVENT_LINK).TIME")
+    field(DTYP, "Soft Timestamp")
+    field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix")
+}
+
+# Unix Epoch TDC
+record(ai, "$(SYS)$(DRIVEID)TDC_Unix")
+{
+    field(DESC, "Unix epoch TDC timestamp")
+    field(INP,  "$(SYS)$(DRIVEID)TDC_Unix_stringin")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(SYS)$(DRIVEID)TSARR-CURR")
+}
+
+# AI to start processing the beam pulse timestamp
+record(ai, "$(SYS)$(DRIVEID)RefProc")
+{
+    field(DESC, "Start processing the beampulse record")
+    field(INP,  "$(BEAMPULSE_EVENT_LINK) CPP")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Epics.PROC")
+}
+
+# AI to convert Ref timestamp to value
+record(ai, "$(SYS)$(DRIVEID)Ref_Epics")
+{
+    field(DESC, "Timestamp of the beam pulse")
+    field(TSEL,  "$(BEAMPULSE_EVENT_LINK).TIME")
+    field(DTYP, "Soft Timestamp")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix_stringin.PROC")
+}
+
+record(stringin, "$(SYS)$(DRIVEID)Ref_Unix_stringin")
+{
+    field(DESC, "Timestamp of the Ref")
+    field(INP,  "@%s.%09f")
+    field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
+    field(DTYP, "Soft Timestamp")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix")
+}
+
+# Beampulse timestamp
+# Needs forward link from softEvent template of beam pulse event.
+record(ai, "$(SYS)$(DRIVEID)Ref_Unix")
+{
+    field(DESC, "Timestamp of the beam pulse")
+    field(INP,  "$(SYS)$(DRIVEID)Ref_Unix_stringin")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(SYS)$(DRIVEID)BPFO")
+}
+
+# Beampulse fanout: store timestamp array in waveform
+# then reset current timestamp array.
+record(fanout, "$(SYS)$(DRIVEID)BPFO")
+{
+    field(LNK1, "$(SYS)$(DRIVEID)PulseTS")
+    field(LNK2, "$(SYS)$(DRIVEID)RST")
+}
+
+# Reset the timestamp array on beam pulse interrupt
+record(bo, "$(SYS)$(DRIVEID)RST")
+{
+    field(DESC, "Reset timestamp array")
+    field(OUT,  "$(SYS)$(DRIVEID)TSARR-CURR.RES NPP")
+}
+
+# Compress records used as circual buffer to store chopper timestamps 
+# in between beam pulses.
+# Note that TSARR_N has to be set strictly greater than chopper frequency
+# divided by beam pulse frequency.
+record(compress, "$(SYS)$(DRIVEID)TSARR-CURR")
+{
+    field(DESC, "Current chopper timestamp array")
+    field(NSAM, "$(TSARR_N)")
+    field(ALG,  "Circular Buffer")
+    field(INP,  "$(SYS)$(DRIVEID)TDC_Unix")
+    field(TSEL, "$(TDC_EVENT_LINK).TIME")
+}
+
+# Final timestamp array from chopper interrupt, 
+# valid until next beampulse intterupt.
+record(waveform, "$(SYS)$(DRIVEID)PulseTS")
+{
+    field(DESC, "Chopper timestamps for last pulse")
+    field(INP,  "$(SYS)$(DRIVEID)TSARR-CURR NPP")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(TSARR_N)")
+    field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
+}
+
