@@ -7,14 +7,15 @@
 #include <dbAccess.h>
 #include <link.h>
  
-static int nano_second_timestamp(aSubRecord *prec) {
+static int nano_second_timestamp_asub(aSubRecord *prec) {
  
     /* INPA and OUTA fields are accessed by precord->a and precord->vala*/
     /* epicsInt64 or epicsUInt64 */
     epicsTimeStamp tick;
 
     if(!dbGetTimestamp(&(prec->inpa),&tick)){
-        *(long long *)prec->vala =  (long long) tick.secPastEpoch*1000000000 + (long long) tick.nsec;
+	/* Add constant (20*365.25*24*3600=631152000) to change from Epics epoch to Unix epoch */
+        *(long long *)prec->vala =  (long long) (tick.secPastEpoch+631152000)*1000000000 + (long long) tick.nsec;
 	*(long *)prec->valb = tick.secPastEpoch;
         *(long *)prec->valc = tick.nsec;
         return 0;
