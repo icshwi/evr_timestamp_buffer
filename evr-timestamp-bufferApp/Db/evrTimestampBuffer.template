@@ -64,11 +64,13 @@ record(stringin, "$(SYS)$(DRIVEID)Ref_Unix_stringin")
 
 # Beampulse timestamp
 # Needs forward link from softEvent template of beam pulse event.
-record(asub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
+record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
 {
-    field(DESC, "Timestamp in nano seconds of the beam pulse")
+    field(DESC, "Timestamp in nano seconds")
     field(SNAM, "nano_second_timestamp_asub")
-    field(FTVA, "epicsInt64")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
     field(NOVA, "1")
     field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix.PROC")
 }

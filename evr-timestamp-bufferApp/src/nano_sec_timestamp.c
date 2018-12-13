@@ -20,10 +20,10 @@ static int nano_second_timestamp_asub(aSubRecord *prec) {
         *(long *)prec->valc = tick.nsec;
         return 0;
     } else {
-        printf("Could not retrieve timestamp \n";
+        printf("Could not retrieve timestamp \n");
         return -1;
     }
 }
  
 /* Note the function must be registered at the end!*/
-epicsRegisterFunction(nano_second_timestamp);
+epicsRegisterFunction(nano_second_timestamp_asub);
