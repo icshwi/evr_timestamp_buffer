@@ -68,6 +68,7 @@ record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
 {
     field(DESC, "Timestamp in nano seconds")
     field(SNAM, "nano_second_timestamp")
+    field(INPA, "$(BEAMPULSE_EVENT_LINK)")
     field(FTVA, "LONG")
     field(FTVB, "LONG")
     field(FTVC, "LONG")

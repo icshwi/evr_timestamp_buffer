@@ -15,7 +15,8 @@ static int nano_second_timestamp(aSubRecord *prec) {
 
     if(!dbGetTimeStamp(&(prec->inpa),&tick)){
 	/* Add constant (20*365.25*24*3600=631152000) to change from Epics epoch to Unix epoch */
-        *(long *)prec->vala =  (long) (tick.secPastEpoch+631152000)*1000000000 + (long) tick.nsec;
+        *(long long *)prec->vala =  (((long long) tick.secPastEpoch) + 631152000) * 1000000000 + (long long) tick.nsec;
+//	printf("Timestamp: %lld \n", *(long long *)prec->vala);
 	*(long *)prec->valb = tick.secPastEpoch;
         *(long *)prec->valc = tick.nsec;
         return 0;
