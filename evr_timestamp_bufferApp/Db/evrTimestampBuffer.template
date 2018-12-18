@@ -123,4 +123,3 @@ record(waveform, "$(SYS)$(DRIVEID)PulseTS")
     field(NELM, "$(TSARR_N)")
     field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
 }
-
