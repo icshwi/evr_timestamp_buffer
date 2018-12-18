@@ -1,4 +1,4 @@
-/* evr-timestamp-bufferMain.cpp */
+/* evr_timestamp_bufferMain.cpp */
 /* Author:  Marty Kraimer Date:    17MAR2000 */
 
 #include <stddef.h>

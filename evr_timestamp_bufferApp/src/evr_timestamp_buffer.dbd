@@ -1,1 +1,1 @@
-function(nano_sec_timestamp)
+function(nano_second_timestamp)

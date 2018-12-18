@@ -67,7 +67,7 @@ record(stringin, "$(SYS)$(DRIVEID)Ref_Unix_stringin")
 record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
 {
     field(DESC, "Timestamp in nano seconds")
-    field(SNAM, "nano_second_timestamp_asub")
+    field(SNAM, "nano_second_timestamp")
     field(FTVA, "LONG")
     field(FTVB, "LONG")
     field(FTVC, "LONG")
