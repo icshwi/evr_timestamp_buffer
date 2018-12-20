@@ -69,7 +69,7 @@ record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
     field(DESC, "Timestamp in nano seconds")
     field(SNAM, "nano_second_timestamp")
     field(INPA, "$(BEAMPULSE_EVENT_LINK)")
-    field(FTVA, "LONG")
+    field(FTVA, "")
     field(FTVB, "LONG")
     field(FTVC, "LONG")
     field(NOVA, "1")
@@ -123,4 +123,10 @@ record(waveform, "$(SYS)$(DRIVEID)PulseTS")
     field(FTVL, "DOUBLE")
     field(NELM, "$(TSARR_N)")
     field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
+}
+
+# test of 64 bit integer
+record(int64in, "$(SYS)$(DRIVEID)_int64in")
+{
+    field(DESC, "64 bit integer")
 }
