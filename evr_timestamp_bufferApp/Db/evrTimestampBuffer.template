@@ -28,7 +28,7 @@ record(stringin, "$(SYS)$(DRIVEID)TDC_Unix_stringin")
 # TDC timestamp
 record(aSub, "$(SYS)$(DRIVEID)TDC_Unix_asub")
 {
-    field(DESC, "Timestamp with unix epoch seconds (A) and nanoseconds (B)")
+    field(DESC, "Timestamp, output A sec, output B nsec")
     field(SNAM, "nano_second_timestamp")
     field(INPA, "$(TDC_EVENT_LINK)")
     field(FTVA, "LONG")
@@ -103,14 +103,14 @@ record(ai, "$(SYS)$(DRIVEID)Ref_Unix")
 # then reset current timestamp array.
 record(fanout, "$(SYS)$(DRIVEID)BPFO")
 {
-    field(LNK1, "$(SYS)$(DRIVEID)PulseTS_sec
-    field(LNK2, "$(SYS)$(DRIVEID)PulseTS_nsec
+    field(LNK1, "$(SYS)$(DRIVEID)PulseTS_sec")
+    field(LNK2, "$(SYS)$(DRIVEID)PulseTS_nsec")
     field(LNK2, "$(SYS)$(DRIVEID)RST_sec")
     field(LNK2, "$(SYS)$(DRIVEID)RST_nsec")
 }
 
 # Reset the timestamp array on beam pulse interrupt
-record(bo, "$(SYS)$(DRIVEID)RST_sec)
+record(bo, "$(SYS)$(DRIVEID)RST_sec")
 {
     field(DESC, "Reset timestamp array")
     field(OUT,  "$(SYS)$(DRIVEID)TS_Array_sec.RES NPP")
@@ -150,7 +150,7 @@ record(compress, "$(SYS)$(DRIVEID)TS_Array_nsec")
 # valid until next beampulse intterupt.
 record(waveform, "$(SYS)$(DRIVEID)PulseTS_sec")
 {
-    field(DESC, "Chopper epoch seconds array during the last pulse")
+    field(DESC, "Chopper epoch seconds array")
     field(INP,  "$(SYS)$(DRIVEID)TS_Array NPP")
     field(FTVL, "DOUBLE")
     field(NELM, "$(TSARR_N)")
@@ -160,7 +160,7 @@ record(waveform, "$(SYS)$(DRIVEID)PulseTS_sec")
 # valid until next beampulse intterupt.
 record(waveform, "$(SYS)$(DRIVEID)PulseTS_nsec")
 {
-    field(DESC, "Chopper nanoseconds array during the last pulse")
+    field(DESC, "Chopper nanoseconds array")
     field(INP,  "$(SYS)$(DRIVEID)TS_Array NPP")
     field(FTVL, "DOUBLE")
     field(NELM, "$(TSARR_N)")
