@@ -1,8 +1,8 @@
 file evrTimestampBuffer.template 
 {
 pattern {SYS		, DRIVEID	, TDC_EVENT_LINK		, BEAMPULSE_EVENT_LINK		, TSARR_N}
-	{$(CHIC_SYS)	, $(CHOP_DRV)01:, $(SYS)$(DEVICE)EvtACnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, 50}
-	{$(CHIC_SYS)	, $(CHOP_DRV)02:, $(SYS)$(DEVICE)EvtBCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, 50}
-	{$(CHIC_SYS)	, $(CHOP_DRV)03:, $(SYS)$(DEVICE)EvtCCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, 50}
-	{$(CHIC_SYS)	, $(CHOP_DRV)04:, $(SYS)$(DEVICE)EvtDCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, 50}
+	{$(CHIC_SYS)	, $(CHOP_DRV)01:, $(SYS)$(DEVICE)EvtACnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, $(BUFFSIZE)}
+	{$(CHIC_SYS)	, $(CHOP_DRV)02:, $(SYS)$(DEVICE)EvtBCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, $(BUFFSIZE)}
+	{$(CHIC_SYS)	, $(CHOP_DRV)03:, $(SYS)$(DEVICE)EvtCCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, $(BUFFSIZE)}
+	{$(CHIC_SYS)	, $(CHOP_DRV)04:, $(SYS)$(DEVICE)EvtDCnt-I	, $(SYS)$(DEVICE)EvtECnt-I	, $(BUFFSIZE)}
 }

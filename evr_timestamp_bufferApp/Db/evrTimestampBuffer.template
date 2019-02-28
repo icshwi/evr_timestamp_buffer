@@ -7,7 +7,6 @@ record(ai, "$(SYS)$(DRIVEID)TDCProc")
 }
 
 # Convert revolution interrupt timestamp from chopper to double
-# Needs forward link from softEvent template of associated event code.
 record(ai, "$(SYS)$(DRIVEID)TDC_Epics")
 {
     field(DESC, "EPICS epoch TDC timestamp")
@@ -17,14 +16,27 @@ record(ai, "$(SYS)$(DRIVEID)TDC_Epics")
 }
 
 # Convert revolution interrupt timestamp from chopper to double
-# Needs forward link from softEvent template of associated event code.
 record(stringin, "$(SYS)$(DRIVEID)TDC_Unix_stringin")
 {
     field(DESC, "Timestamp of the TDC")
     field(INP,  "@%s.%09f")
     field(TSEL, "$(TDC_EVENT_LINK).TIME")
     field(DTYP, "Soft Timestamp")
-    field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix")
+    field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix_asub")
+}
+
+# TDC timestamp
+record(aSub, "$(SYS)$(DRIVEID)TDC_Unix_asub")
+{
+    field(DESC, "Timestamp, output A sec, output B nsec")
+    field(SNAM, "nano_second_timestamp")
+    field(INPA, "$(TDC_EVENT_LINK)")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "INT64")
+    field(NOVA, "1")
+    field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix.PROC")
 }
 
 # Unix Epoch TDC
@@ -33,7 +45,7 @@ record(ai, "$(SYS)$(DRIVEID)TDC_Unix")
     field(DESC, "Unix epoch TDC timestamp")
     field(INP,  "$(SYS)$(DRIVEID)TDC_Unix_stringin")
     field(DTYP, "Soft Channel")
-    field(FLNK, "$(SYS)$(DRIVEID)TSARR-CURR")
+    field(FLNK, "$(SYS)$(DRIVEID)Fanout_buffer")
 }
 
 # AI to start processing the beam pulse timestamp
@@ -59,7 +71,22 @@ record(stringin, "$(SYS)$(DRIVEID)Ref_Unix_stringin")
     field(INP,  "@%s.%09f")
     field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
     field(DTYP, "Soft Timestamp")
-    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix_asub.PROC")
+}
+
+# Beampulse timestamp
+# Needs forward link from softEvent template of beam pulse event.
+record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
+{
+    field(DESC, "Timestamp in nano seconds")
+    field(SNAM, "nano_second_timestamp")
+    field(INPA, "$(BEAMPULSE_EVENT_LINK)")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "INT64")
+    field(NOVA, "1")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix.PROC")
 }
 
 # Beampulse timestamp
@@ -76,7 +103,7 @@ record(ai, "$(SYS)$(DRIVEID)Ref_Unix")
 # then reset current timestamp array.
 record(fanout, "$(SYS)$(DRIVEID)BPFO")
 {
-    field(LNK1, "$(SYS)$(DRIVEID)PulseTS")
+    field(LNK1, "$(SYS)$(DRIVEID)TDC_array")
     field(LNK2, "$(SYS)$(DRIVEID)RST")
 }
 
@@ -84,29 +111,51 @@ record(fanout, "$(SYS)$(DRIVEID)BPFO")
 record(bo, "$(SYS)$(DRIVEID)RST")
 {
     field(DESC, "Reset timestamp array")
-    field(OUT,  "$(SYS)$(DRIVEID)TSARR-CURR.RES NPP")
+    field(OUT,  "$(SYS)$(DRIVEID)TDC_buffer.RES NPP")
+}
+
+# Provide seconds and nanoseconds to buffer.
+# Every even buffer element is seconds,
+# every uneven buffer element is nanoseconds
+
+record(fanout, "$(SYS)$(DRIVEID)Fanout_buffer")
+{
+    field(DESC, "Load seconds and nanoseconds in buffer")
+    field(LNK1, "$(SYS)$(DRIVEID)Buffer_calc")
+    field(LNK2, "$(SYS)$(DRIVEID)TDC_buffer")
+    field(LNK3, "$(SYS)$(DRIVEID)Buffer_calc")
+    field(LNK4, "$(SYS)$(DRIVEID)TDC_buffer")
+}
+
+record(calc, "$(SYS)$(DRIVEID)Buffer_calc")
+{
+    field(DESC, "Provide buffer with secs and nsecs")
+    field(INPA, "$(SYS)$(DRIVEID)TDC_Unix_asub.VALA")
+    field(INPB, "$(SYS)$(DRIVEID)TDC_Unix_asub.VALB")
+    field(INPC, "$(SYS)$(DRIVEID)TDC_buffer.NUSE")
+    field(CALC, "C%2?B:A")
 }
 
 # Compress records used as circual buffer to store chopper timestamps 
 # in between beam pulses.
 # Note that TSARR_N has to be set strictly greater than chopper frequency
 # divided by beam pulse frequency.
-record(compress, "$(SYS)$(DRIVEID)TSARR-CURR")
+record(compress, "$(SYS)$(DRIVEID)TDC_buffer")
 {
-    field(DESC, "Current chopper timestamp array")
+    field(DESC, "Current chopper seconds array")
     field(NSAM, "$(TSARR_N)")
     field(ALG,  "Circular Buffer")
-    field(INP,  "$(SYS)$(DRIVEID)TDC_Unix")
+    field(INP,  "$(SYS)$(DRIVEID)Buffer_calc.VAL")
     field(TSEL, "$(TDC_EVENT_LINK).TIME")
 }
 
 # Final timestamp array from chopper interrupt, 
 # valid until next beampulse intterupt.
-record(waveform, "$(SYS)$(DRIVEID)PulseTS")
+record(waveform, "$(SYS)$(DRIVEID)TDC_array")
 {
-    field(DESC, "Chopper timestamps for last pulse")
-    field(INP,  "$(SYS)$(DRIVEID)TSARR-CURR NPP")
-    field(FTVL, "DOUBLE")
+    field(DESC, "Chopper epoch seconds array")
+    field(INP,  "$(SYS)$(DRIVEID)TDC_buffer NPP")
+    field(FTVL, "LONG")
     field(NELM, "$(TSARR_N)")
     field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
 }
