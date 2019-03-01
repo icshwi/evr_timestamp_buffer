@@ -1,1 +1,3 @@
 function(nano_second_timestamp)
+device(waveform, CONSTANT, devWfTDC, "TDC")
+device(aai, CONSTANT, devAaiTDC, "TDC")

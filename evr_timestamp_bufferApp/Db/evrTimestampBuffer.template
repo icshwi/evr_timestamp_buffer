@@ -154,6 +154,7 @@ record(compress, "$(SYS)$(DRIVEID)TDC_buffer")
 record(waveform, "$(SYS)$(DRIVEID)TDC_array")
 {
     field(DESC, "Chopper epoch seconds array")
+    field(DTYP, "TDC")
     field(INP,  "$(SYS)$(DRIVEID)TDC_buffer NPP")
     field(FTVL, "LONG")
     field(NELM, "$(TSARR_N)")
