@@ -26,11 +26,21 @@ record(stringin, "$(SYS)$(DRIVEID)TDC_Unix_stringin")
 }
 
 # TDC timestamp
+record(stringout, "Epics"){
+    field(VAL, "0")
+    field(PINI, "1")
+}
+record(stringout, "Unix"){
+    field(VAL, "1")
+    field(PINI, "1")
+}
+
 record(aSub, "$(SYS)$(DRIVEID)TDC_Unix_asub")
 {
     field(DESC, "Timestamp, output A sec, output B nsec")
     field(SNAM, "nano_second_timestamp")
     field(INPA, "$(TDC_EVENT_LINK)")
+    field(INPB, "$(Epics)") field(FTB, "STRING")  field(NOB, "1")
     field(FTVA, "LONG")
     field(FTVB, "LONG")
     field(FTVC, "LONG")
@@ -53,7 +63,7 @@ record(ai, "$(SYS)$(DRIVEID)RefProc")
 {
     field(DESC, "Start processing the beampulse record")
     field(INP,  "$(BEAMPULSE_EVENT_LINK) CPP")
-    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix.PROC")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix_asub.PROC")
 }
 
 record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
@@ -61,6 +71,7 @@ record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
     field(DESC, "Timestamp in nano seconds")
     field(SNAM, "nano_second_timestamp")
     field(INPA, "$(BEAMPULSE_EVENT_LINK)")
+    field(INPB, "$(Unix)") field(FTB, "STRING")  field(NOB, "1")
     field(FTVA, "LONG")
     field(FTVB, "LONG")
     field(FTVC, "LONG")
