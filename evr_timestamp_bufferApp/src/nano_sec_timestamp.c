@@ -7,7 +7,7 @@
 #include <dbFldTypes.h>
 #include <dbAccess.h>
 #include <link.h>
-
+#include <string.h>
 #include <sys/time.h>
 
 
