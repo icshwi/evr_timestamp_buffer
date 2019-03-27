@@ -25,7 +25,6 @@ record(stringin, "$(SYS)$(DRIVEID)TDC_Unix_stringin")
     field(FLNK, "$(SYS)$(DRIVEID)TDC_Unix_asub")
 }
 
-# TDC timestamp
 record(aSub, "$(SYS)$(DRIVEID)TDC_Unix_asub")
 {
     field(DESC, "Timestamp, output A sec, output B nsec")
@@ -53,9 +52,23 @@ record(ai, "$(SYS)$(DRIVEID)RefProc")
 {
     field(DESC, "Start processing the beampulse record")
     field(INP,  "$(BEAMPULSE_EVENT_LINK) CPP")
-    field(FLNK, "$(SYS)$(DRIVEID)Ref_Epics.PROC")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix_asub.PROC")
 }
 
+record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
+{
+    field(DESC, "Timestamp in nano seconds")
+    field(SNAM, "nano_second_timestamp")
+    field(INPA, "$(BEAMPULSE_EVENT_LINK)")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "LONG")
+    field(FTVE, "LONG")
+    field(FTVF, "LONG")
+    field(NOVA, "1")
+    field(FLNK, "$(SYS)$(DRIVEID)Ref_Epics.PROC")
+}
 # AI to convert Ref timestamp to value
 record(ai, "$(SYS)$(DRIVEID)Ref_Epics")
 {
@@ -71,21 +84,6 @@ record(stringin, "$(SYS)$(DRIVEID)Ref_Unix_stringin")
     field(INP,  "@%s.%09f")
     field(TSEL, "$(BEAMPULSE_EVENT_LINK).TIME")
     field(DTYP, "Soft Timestamp")
-    field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix_asub.PROC")
-}
-
-# Beampulse timestamp
-# Needs forward link from softEvent template of beam pulse event.
-record(aSub, "$(SYS)$(DRIVEID)Ref_Unix_asub")
-{
-    field(DESC, "Timestamp in nano seconds")
-    field(SNAM, "nano_second_timestamp")
-    field(INPA, "$(BEAMPULSE_EVENT_LINK)")
-    field(FTVA, "LONG")
-    field(FTVB, "LONG")
-    field(FTVC, "LONG")
-    field(FTVD, "INT64")
-    field(NOVA, "1")
     field(FLNK, "$(SYS)$(DRIVEID)Ref_Unix.PROC")
 }
 
