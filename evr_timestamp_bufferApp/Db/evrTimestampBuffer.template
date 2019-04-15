@@ -165,7 +165,7 @@ record(fanout, "$(SYS)$(DRIVEID)BPFO")
 {
     field(LNK1, "$(SYS)$(DRIVEID)TDC_array")
     field(LNK2, "$(SYS)$(DRIVEID)TDC_RST")
-    field(LNK3, "$(SYS)$(DRIVEID)Ref_array")
+    field(LNK3, "$(SYS)$(DRIVEID)Ref_Fanout_buffer")
     field(LNK4, "$(SYS)$(DRIVEID)Ref_RST")
 }
 
@@ -183,6 +183,7 @@ record(fanout, "$(SYS)$(DRIVEID)Ref_Fanout_buffer")
     field(LNK2, "$(SYS)$(DRIVEID)Ref_buffer")
     field(LNK3, "$(SYS)$(DRIVEID)Ref_Buffer_calc")
     field(LNK4, "$(SYS)$(DRIVEID)Ref_buffer")
+    field(LNK5, "$(SYS)$(DRIVEID)Ref_array")
 }
         
 record(calc, "$(SYS)$(DRIVEID)Ref_Buffer_calc")
