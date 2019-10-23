@@ -1,0 +1,14 @@
+#  ### evr-timestamp-buffer iocsh  ###
+#- ###################################################
+#-
+#- CHIC_SYS       - Required: System prefix for CHIC PV names
+#  CHIC_DEV	  - Required: Device name for CHIC PV names
+#
+#  TODO: Check CHOP_DRV definition
+#- CHOP_DRV       - Required: Chopper drive PV name (device part)
+#
+#  TODO: Check SYS component
+#- SYS            - Required: System prefix (for which component?)
+#
+
+dbLoadRecords("evrTimestampBuffer.db", "CHIC_SYS=$(CHIC_SYS), CHOP_DRV=$(CHOP_DRV), SYS=$(SYS), DEVICE=$(CHIC_DEV):, BUFFSIZE=$(BUFFSIZE)")
